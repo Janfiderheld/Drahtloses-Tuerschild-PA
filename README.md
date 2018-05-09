@@ -4,7 +4,9 @@ Verantwortlich: Niclas Muss & Jan-Philipp Töberg
 
 Projektbetreuer: Prof. Dr.-Ing. Thomas Korte
 
+
 Startdatum: 02.05.2018
+
 Endedatum: 28.06.2018
 
 ## Aufgabenbeschreibung:
@@ -17,3 +19,9 @@ konstruiert werden. In der c't ist dazu ein Beispiel angegeben.
 [DoorsignEPD](https://github.com/jamct/DoorsignEPD),
 [Basecamp](https://github.com/merlinschumacher/Basecamp),
 [Espressif](https://github.com/espressif/arduino-esp32)
+
+### Benötigte Software / Hardware
+- Sparkfun ESP32 Thing
+- 7,5 Zoll e-Paper-Display von Waveshare
+- Arduino IDE 
+- XAMPP (für PHP-Webserver-Hosting)
