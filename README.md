@@ -1,6 +1,6 @@
 # Drahtloses Türschild PA
 
-Verantwortlich: Niclas Muss & Jan-Philipp Töberg (@Janfiderheld)
+Verantwortlich: Niclas Muss & Jan-Philipp Töberg
 
 Projektbetreuer: Prof. Dr.-Ing. Thomas Korte
 
