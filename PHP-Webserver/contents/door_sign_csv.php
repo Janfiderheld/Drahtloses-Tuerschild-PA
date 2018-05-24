@@ -16,6 +16,7 @@
 //    $spreadsheet_url="https://docs.google.com/spreadsheets/d/<gdoc-id>/gviz/tq?tqx=out:csv";
     $spreadsheet_url="users.csv";
 
+/*
 // The logo shown in the upper right corner
     $logo_src="contents/static_image/ct_bwr.png";
     $logo_width=110;
@@ -33,7 +34,7 @@
     $logo_height=round($logo_width/$size[0]*$size[1],0);
 
     $logo = imagescale($logo, $logo_width, $logo_height);
-
+*/ 
 
 // We need to provide the "room" parameter to use one csv file for several rooms
     if (strlen($_GET['room'])){
@@ -76,9 +77,11 @@
     $cursorY += $fontSize*1.4;
     imagettftext($im, $fontSize, 0, 10, $cursorY, $red, $DEFAULT_FONT['bold'], $room);
 
+	/*
     // Add logo
     imagecopymerge($im, $logo, $displayWidth - $logo_width - 20, 5, 0, 0 , $logo_width, $logo_height, 100);
     imagedestroy($logo);
+	*/
 
     $cursorY += 5;
     imageline ($im , 10 , $cursorY , $displayWidth - 20 , $cursorY , $black );
