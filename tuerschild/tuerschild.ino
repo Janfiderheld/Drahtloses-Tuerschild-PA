@@ -6,10 +6,11 @@
 
 // Define your display type here: 2.9, 4.2 (bw and bwr) or 7.5 (bw or bwr) inches are supported:
 // Default: 4.2bwr
-#define DISPLAY_TYPE '4.2bwr'
+#define DISPLAY_TYPE '7.5'
 
 // Default 5
-#define CHIP_SELECT 5
+// CS-Pin for Sparkfun ESP32 Thing: 2
+#define CHIP_SELECT 2
 
 // Default -1: disabled
 #define STATUS_PIN -1
