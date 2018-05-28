@@ -1,3 +1,0 @@
-Anmerkungen/Notizen waehrend der Entwicklung:
-
-- bei dem Sparkfun ESP32 Thing, welchen wir benutzen (im Gegensatz zum Wemos LOLIN32 der c't), ist der Pin fuer "Chip Select (CS)" nicht die Nummer 5, sondern die 2!
