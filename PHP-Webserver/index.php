@@ -100,6 +100,8 @@ $im = imagecreate($displayWidth, $displayHeight);
 $background_color = ImageColorAllocate ($im, 255, 255, 255);
 $black = ImageColorAllocate($im, 0, 0, 0);
 $red = ImageColorAllocate($im, 0xFF, 0x00, 0x00);
+$yellow = ImageColorAllocate($im, 0xFF, 0xFF, 0x00);
+$grey = ImageColorAllocate($im, 0xAF, 0xAF, 0xAF);
 
 
 if(is_file($selectedContent)){
