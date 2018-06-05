@@ -4,6 +4,7 @@
     //Konstanten
     const RAUM = 'Raum 365';
 	const RAUMNAME = 'Labor für Informationstechnologie';
+	const BILD = "contents/static_image/Huhn.jpg";
 	
 	//Variablen
     $fontSize = $scale;
@@ -77,7 +78,14 @@
 	//Anwesenheitsstatus ausgeben
 	$fontSize = $fontSize*1.1;
 	$cursorY = $displayHeight-60;
-	imagettftext($im, $fontSize, 0, 500, $cursorY, $black, $DEFAULT_FONT['regular'], "Ich bin ...");
+	imagettftext($im, $fontSize, 0, 400, $cursorY, $black, $DEFAULT_FONT['regular'], "Ich bin ...");
 	$cursorY += 30;
-	imagettftext($im, $fontSize, 0, 500, $cursorY, $black, $DEFAULT_FONT['regular'], "... ".$status);
+	imagettftext($im, $fontSize, 0, 400, $cursorY, $black, $DEFAULT_FONT['regular'], "... ".$status);
+	
+	//Bild anzeigen (Das Bild wird auf eine Größe höhe von 100 pixeln Runterskaliert. Das Seitenverhältniss bleibt gleich)
+    $imageSource = imagecreatefromjpeg(BILD);
+    list($originalwidth, $originalheight) = getimagesize(BILD);
+	$heigth = 100;
+	$width = 77; ($heigth/$originalheight)*$width;
+    imagecopyresampled($im, $imageSource, $displayWidth-$width, $displayHeight-$heigth, 0, 0, $width, $heigth, $originalwidth, $originalheight);
 ?>
