@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="utf-8"/>
+	<title>Türschild - Config</title>
+</head>
+<body>
+	<h1>Einrichtung des Türschilds</h1>
+	<hr>
+	
+	<h3>1) Anpassung des Zustands für das Feld "Ich bin..."</h3>
+	
+	<form action="">
+		<input type="radio" name="stateOfProf" value="anwesend" checked="checked">anwesend<br>
+		<input type="radio" name="stateOfProf" value="abwesend">abwesend<br>
+		<input type="radio" name="stateOfProf" value="krank">krank<br>
+		<input type="radio" name="stateOfProf" value="Urlaub">im Urlaub<br>
+		<input type="radio" name="stateOfProf" value="Pause">in der Pause
+	</form>
+	
+	<hr style="border:dashed #6E6E6E 2px">
+
+	<h3>Freitext erstellen</h3>
+	<textarea id="newMessage" rows="5" cols="200" style="resize:none">Geben Sie hier die neue Meldung ein!</textarea>
+	
+	<h4>Aktuell werden folgende Meldungen angezeigt:</h4>
+
+	<p id="oldMessageTop">Ich bin eine alte Meldung</p>
+	<p id="oldMessageBottom">Ich auch</p>
+	
+	<button type="submit" value="Submit" onclick="btnConfirm()">Bestätigen</button>
+	<button type="cancel" value="Cancel" onclick="btnCancel()">Abbrechen</button>
+
+	<p style="font-size: 10px">
+		Project by Niclas Muss & Jan-Philipp Töberg<br>
+		<a style="font-size: 10px" href="https://github.com/Janfiderheld/Drahtloses-Tuerschild-PA">Link zum Projekt auf Github</a>
+	</p>	
+</body>
+
+<script>
+	function btnConfirm() {
+		var lastMessage = document.getElementById("oldMessageTop").innerHTML;
+		var contentOfTextArea = document.getElementById("newMessage").value;
+		var chosenStateOfProf = "undefined";
+		
+		var buttons = document.forms[0];		
+		for(var i = 0; i < buttons.length; i++) {
+			if(buttons[i].checked) {
+				chosenStateOfProf = buttons[i].value;
+			}
+		}
+		
+		sendToPHP(chosenStateOfProf);
+	}
+	
+	function sendToPHP(dataToSend) {
+		var httpc = new XMLHttpRequest();
+		var url = "webinterface.php";
+		httpc.open("POST", url, true);
+		
+		httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		httpc.setRequestHeader("Content-Length", dataToSend.length);
+		
+		httpc.onreadystatechange = function() { //Call a function when the state changes.
+		if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
+				// alert(httpc.responseText); // some processing here, or whatever you want to do with the response
+			}
+		}
+		 
+		httpc.send(dataToSend);
+	}
+	
+	function btnCancel() {
+		location.reload();
+	}
+</script>
+</html>
