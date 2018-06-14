@@ -23,6 +23,7 @@ const DISPLAYS = array( "7.5"=>array("size"=>"640x384","rotate"=>"false"),
 
 // Use Googles Noto fonts as the default font face
 $DEFAULT_FONT = array(
+	"test"=>realpath("./fonts/Wingdings_3.ttf"),
     "regular"=>realpath("./fonts/noto/NotoSans-Regular.ttf"),
     "bold"=>realpath("./fonts/noto/NotoSans-Bold.ttf"),
     "italic"=>realpath("./fonts/noto/NotoSans-Italic.ttf"),

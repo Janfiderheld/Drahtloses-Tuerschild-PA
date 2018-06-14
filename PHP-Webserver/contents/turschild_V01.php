@@ -20,7 +20,7 @@
 	imagettftext($im, $fontSize, 0, 210, $cursorY-1, $black, $DEFAULT_FONT['regular'], RAUMNAME);
     $cursorY += 10;
 	imagesetthickness($im, 10);
-    imageline ($im , 0 , $cursorY , $displayWidth , $cursorY , $yellow	);
+    imageline ($im , 0 , $cursorY , $displayWidth , $cursorY , $red	);
 	
 	//Infomonitor
 	$fontSize = 0.5*$scale;
