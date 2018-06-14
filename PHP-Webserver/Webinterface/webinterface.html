@@ -4,24 +4,25 @@
 	<meta charset="utf-8"/>
 	<title>Türschild - Config</title>
 </head>
-<body>
+<body onload="reloadAndGetData()">
 	<h1>Einrichtung des Türschilds</h1>
 	<hr>
 	
 	<h3>1) Anpassung des Zustands für das Feld "Ich bin..."</h3>
 	
 	<form action="">
-		<input type="radio" name="stateOfProf" value="anwesend" checked="checked">anwesend<br>
-		<input type="radio" name="stateOfProf" value="abwesend">abwesend<br>
-		<input type="radio" name="stateOfProf" value="krank">krank<br>
-		<input type="radio" name="stateOfProf" value="Urlaub">im Urlaub<br>
-		<input type="radio" name="stateOfProf" value="Pause">in der Pause
+		<input id="rbAnwesend" type="radio" name="stateOfProf" value="anwesend" checked="checked">anwesend<br>
+		<input id="rbAbwesend" type="radio" name="stateOfProf" value="abwesend">abwesend<br>
+		<input id="rbKrank" type="radio" name="stateOfProf" value="krank">krank<br>
+		<input id="rbUrlaub" type="radio" name="stateOfProf" value="im Urlaub">im Urlaub<br>
+		<input id="rbPause" type="radio" name="stateOfProf" value="in der Pause">in der Pause
 	</form>
 	
 	<hr style="border:dashed #6E6E6E 2px">
 
 	<h3>Freitext erstellen</h3>
 	<textarea id="newMessage" rows="5" cols="200" style="resize:none">Geben Sie hier die neue Meldung ein!</textarea>
+	<p style="font-size: 11px; font-style: italic">Hinweis: Dieses Feld leer lassen um keine Änderungen vorzunehmen!</p>
 	
 	<h4>Aktuell werden folgende Meldungen angezeigt:</h4>
 
@@ -37,9 +38,51 @@
 	</p>	
 </body>
 
-<script>
+<script type="text/javascript">
+	function reloadAndGetData() {
+		var httpc2 = new XMLHttpRequest();
+		var url = "getDataFromCSV.php";
+		httpc2.open("POST", url, true);
+		
+		httpc2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		
+		httpc2.onreadystatechange = function() { 
+			if(httpc2.readyState == XMLHttpRequest.DONE && httpc2.status == 200) {				
+				var dataFromJSON = JSON.parse(httpc2.responseText);	
+				
+				document.getElementById("oldMessageTop").innerHTML = dataFromJSON.newsNew;
+				document.getElementById("oldMessageBottom").innerHTML = dataFromJSON.newsOld;
+				
+				var radiobuttonTemp;
+				
+				switch(dataFromJSON.status) {
+					case "anwesend":
+						radiobuttonTemp = document.getElementById("rbAnwesend");
+						break;
+					case "abwesend":
+						radiobuttonTemp = document.getElementById("rbAbwesend");
+						break;
+					case "krank":
+						radiobuttonTemp = document.getElementById("rbKrank");
+						break;
+					case "im Urlaub":
+						radiobuttonTemp = document.getElementById("rbUrlaub");
+						break;
+					case "in der Pause":
+						radiobuttonTemp = document.getElementById("rbPause");
+						break;
+				}
+				radiobuttonTemp.checked = true;
+			}				
+		}
+		httpc2.send(null);
+		
+		document.getElementById("newMessage").value = "Geben Sie hier die neue Meldung ein!";
+	}
+
 	function btnConfirm() {
-		var lastMessage = document.getElementById("oldMessageTop").innerHTML;
+		var lastMessageNew = document.getElementById("oldMessageTop").innerHTML;
+		var lastMessageOld = document.getElementById("oldMessageBottom").innerHTML;
 		var contentOfTextArea = document.getElementById("newMessage").value;
 		var chosenStateOfProf = "undefined";
 		
@@ -50,24 +93,26 @@
 			}
 		}
 		
-		sendToPHP(chosenStateOfProf);
+		sendToPHP(chosenStateOfProf, contentOfTextArea, lastMessageNew, lastMessageOld);
 	}
 	
-	function sendToPHP(dataToSend) {
+	function sendToPHP(stateOfProf, newsToWrite, lastNewNews, lastOldNews) {
 		var httpc = new XMLHttpRequest();
-		var url = "webinterface.php";
+		var url = "saveDataToCSV.php";
 		httpc.open("POST", url, true);
 		
 		httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		httpc.setRequestHeader("Content-Length", dataToSend.length);
+		// httpc.setRequestHeader("Content-Length", dataToSend.length);
 		
-		httpc.onreadystatechange = function() { //Call a function when the state changes.
-		if(httpc.readyState == 4 && httpc.status == 200) { // complete and no errors
-				// alert(httpc.responseText); // some processing here, or whatever you want to do with the response
+		httpc.onreadystatechange = function() { 
+			if(httpc.readyState == XMLHttpRequest.DONE && httpc.status == 200) {
+				// alert(httpc.responseText);
+				console.log(this.responseText);
+				location.reload();
 			}
 		}
 		 
-		httpc.send(dataToSend);
+		httpc.send("zustand=" + stateOfProf + "&meldungWrite=" + newsToWrite + "&meldung1=" + lastNewNews + "&meldung2=" + lastOldNews);
 	}
 	
 	function btnCancel() {
