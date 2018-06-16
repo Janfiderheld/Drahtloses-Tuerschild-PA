@@ -3,7 +3,7 @@
     //Konstanten
     const RAUM = 'Raum 365';
 	const RAUMNAME = 'Labor für Informationstechnologie';
-	const BILD = "contents/static_image/Huhn_bw.jpg";
+	const BILD = "contents/static_image/Huhn.jpg";
 	
 	//Variablen
     $fontSize = $scale*1.5;
@@ -34,7 +34,7 @@
 	imagettftext($im, $fontSize, 0, 10, $cursorY, $black, $DEFAULT_FONT['regular'], RAUMNAME);
     $cursorY += 15;
 	imagesetthickness($im, 10);
-    imageline ($im , 0 , $cursorY , $displayWidth , $cursorY , $black	);
+    imageline ($im , 0 , $cursorY , $displayWidth , $cursorY , $yellow	);
 	
 	//Infomonitor
 	$fontSize = 0.5*$scale;
