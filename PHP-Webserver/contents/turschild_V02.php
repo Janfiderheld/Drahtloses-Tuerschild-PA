@@ -34,25 +34,25 @@
 	imagettftext($im, $fontSize, 0, 10, $cursorY, $black, $DEFAULT_FONT['regular'], RAUMNAME);
     $cursorY += 15;
 	imagesetthickness($im, 10);
-    imageline ($im , 0 , $cursorY , $displayWidth , $cursorY , $yellow	);
+    imageline ($im , 0 , $cursorY , $displayWidth , $cursorY , $black	);
 	
 	//Infomonitor
 	$fontSize = 0.5*$scale;
 	$nachicht;
 	$abbruch=0;
 	for ($j=1; $j<count($status); $j++){
-		$words = explode(" ",$status[$j]);
-		$wnum = count($words);
-		$line = '';
-		$text = '';
+		$words = explode(" ",$status[$j]);//Array der Wörter aus dem eingegebenen Text
+		$wnum = count($words);//Anzahl der Wörter
+		$line = '';//Die mommentan beschriebene Zeile (benutzt zum Messes)
+		$text = '';//Die mommentan druckbare Zeile
 		$cursorY += $fontSize*2;
 		$textHeigth = $cursorY;
 		for($i=0; $i<$wnum; $i++){
 			$line .= $words[$i];
 			$dimensions = imagettfbbox($fontSize, 0, $DEFAULT_FONT['bold'], $line);
 			$lineWidth = $dimensions[2] - $dimensions[0];
-			if ($lineWidth > $displayWidth-40) {	//Breitenbeschränkung des Bildschirms
-				if ($textHeigth+$fontSize*1.5 > $displayHeight-105){ //Wenn die Höhenbeschrenkung überschritten wird, wird die letzte Nachicht nicht ausgegeben
+			if ($lineWidth > $displayWidth-40) {	//Wenn die Breitenbeschränkung überschritten wird, soll eine neue Zeile gestartet werden
+				if ($textHeigth+$fontSize*1.5 > $displayHeight-105){ //Wenn die Höhenbeschrenkung überschritten wird, soll die letzte Nachicht nicht ausgegeben werde
 					$abbruch=1;
 					break;
 				}
@@ -69,15 +69,17 @@
 		if ($abbruch == 1){
 			break;
 		}
-		//ausgabe einer Nachicht
+		//Ausgabe einer Nachicht
 		imagettftext($im, $fontSize, 0, 20, $cursorY, $black, $DEFAULT_FONT['bold'], '>');
 		$nachicht[]= $text; //letzte Zeile in das Nachichtenarray speichern
 		for ($i=0; $i<count($nachicht); $i++){
 			imagettftext($im, $fontSize, 0, 40, $cursorY, $black, $DEFAULT_FONT['bold'], $nachicht[$i]);
 			$cursorY += $fontSize*1.5;
+			$cursorY += $dimensions[1]-$dimensions[6];
 		}
 		$cursorY -= $fontSize*1.5;
 		$nachicht = array(); //Nachichtenarray zurücksetzen
+		
 	}
 	
 	//Kasten am unteren Ende

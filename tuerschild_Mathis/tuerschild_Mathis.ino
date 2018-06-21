@@ -2,11 +2,12 @@
 
 #define DEBUG 1
 
+
 #include <Basecamp.hpp>
 
 // Define your display type here: 2.9, 4.2 (bw and bwr) or 7.5 (bw or bwr) inches are supported:
 // Default: 4.2bwr
-#define DISPLAY_TYPE '7.5'
+#define DISPLAY_TYPE '7.5bwr'
 
 // Default 5
 // CS-Pin for Sparkfun ESP32 Thing: 2
@@ -39,28 +40,12 @@ bool setupMode  = false;                              //* Setup mode: The web in
 String sleepIntervalHeader = "X-sleepInterval:";      //* Name of the header for the sleep interval
 long   sleepIntervalSetbyHeader = 0;                  //* Changed if the sleep interval is set by the server via the header
 
-#include <GxEPD.h>
 
-#if DISPLAY_TYPE == '1.5'
-#include <GxGDEP015OC1/GxGDEP015OC1.cpp>      // 1.54" b/w
-bool hasRed = false;
-String displayType = "1.5";
-#endif
-#if DISPLAY_TYPE == '2.9'
-#include <GxGDEH029A1/GxGDEH029A1.cpp>      // 2.9" b/w
-bool hasRed = false;
-String displayType = "2.9";
-#endif
-#if DISPLAY_TYPE == '4.2'
-#include <GxGDEW042T2/GxGDEW042T2.cpp>      // 4.2" b/w
-bool hasRed = false;
-String displayType = "4.2";
-#endif
-#if DISPLAY_TYPE == '4.2bwr'
-#include <GxGDEW042Z15/GxGDEW042Z15.cpp>       // 4.2" b/w/r
-bool hasRed = true;
-String displayType = "4.2bwr";
-#endif
+int x = 0;
+int y = 0;
+size_t lenG;
+
+#include <GxEPD.h>
 #if DISPLAY_TYPE == '7.5'
 #include <GxGDEW075T8/GxGDEW075T8.cpp>      // 7.5" b/w
 bool hasRed = false;
@@ -78,6 +63,18 @@ String displayType = "7.5bwr";
 GxIO_Class io(SPI, CHIP_SELECT, 17, 16);
 GxEPD_Class display(io, 16, 4);
 
+void notConfed(){
+      const GFXfont* f = &FreeMonoBold9pt7b;
+  
+      display.fillScreen(GxEPD_WHITE);
+      display.setRotation(1);
+      display.setFont(f);
+      display.setCursor(0, 0);
+      display.println();
+      display.println("Wifi not configured!");
+      display.println("Connect to hotspot 'ESP32' with the secret '" + iot.configuration.get("APSecret") + "' and open 192.168.4.1");
+}
+
 void setup() {
   iot.begin();
   display.init(); 
@@ -88,6 +85,7 @@ void setup() {
 
   const GFXfont* f = &FreeMonoBold9pt7b;
   display.setTextColor(GxEPD_BLACK);
+  
   iot.web.addInterfaceElement("ImageHost", "input", "Server to load image from (host name or IP address):", "#configform", "ImageHost");
   iot.web.addInterfaceElement("ImageAddress", "input", "Address to load image from (path on server, starting with / e.g.: /index.php/?debug=false&[...] ):", "#configform", "ImageAddress");
   iot.web.addInterfaceElement("ImageWait", "input", "Sleep time (to next update) in seconds:", "#configform", "ImageWait");
@@ -105,13 +103,7 @@ void setup() {
 
     if (iot.configuration.get("WifiConfigured") != "True") {
       setupMode = true;
-      display.fillScreen(GxEPD_WHITE);
-      display.setRotation(1);
-      display.setFont(f);
-      display.setCursor(0, 0);
-      display.println();
-      display.println("Wifi not configured!");
-      display.println("Connect to hotspot 'ESP32' with the secret '" + iot.configuration.get("APSecret") + "' and open 192.168.4.1");
+      display.drawPaged(notConfed);
       display.update();
     } else {
 
@@ -180,18 +172,11 @@ void setup() {
  *  @param  boolean start True if the begin of a new screen
  * 
  */
-void drawPixels(char *data, size_t len, boolean start){
-  static int x;
-  static int y;
-  if (start){
-    x = 0;
-    y = 0;
-    // Not required
-    //display.eraseDisplay(true);
-  }
+void drawPixels(const void *dataV, const void *len){
+  const char* data = (const char*)dataV;
 
-  Serial.println(String("Printing ") + len + " Bytes to the screen");
-  for (size_t i=0; i<len; i++){
+  Serial.println(String("Printing ") + *(size_t*)len + " Bytes to the screen");
+  for (size_t i=0; i<*(size_t*)len; i++){
 
     if (hasRed == true) {
       for (int b = 7; b >= 0; b -= 2) {
@@ -293,12 +278,15 @@ void onDataHandler(void *r, AsyncClient *client, void *data, size_t len){
       }
       
     }
-    
+    x = 0;
+    y = 0;
+    lenG = (size_t)len-endHeader-4;
     // Handle remaining data bytes. 4 bytes for \r\n\r\n separation
-    drawPixels((char*)data+endHeader+4, len-endHeader-4, true);
+    display.drawPaged(drawPixels ,(const void*)data+endHeader+4, (const void*)(&lenG));
   } else {
     // No header -> directly draw to display
-    drawPixels((char*)data, len, false);
+    lenG = (size_t)len;
+    display.drawPaged(drawPixels, (const void*)data, ( const void*)lenG);
   }
 }
 
