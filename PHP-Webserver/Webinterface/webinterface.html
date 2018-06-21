@@ -38,23 +38,27 @@
 	</p>	
 </body>
 
+<!-- Hier beginnt der Javascript-Teil -->
 <script type="text/javascript">
+	// lädt Zustand des Profs und beide alten Meldungen aus der CSV-Datei beim beim Aktualisieren der Seite 
 	function reloadAndGetData() {
-		var httpc2 = new XMLHttpRequest();
+		var httpReq = new XMLHttpRequest();
 		var url = "getDataFromCSV.php";
-		httpc2.open("POST", url, true);
+		httpReq.open("POST", url, true);
 		
-		httpc2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		httpReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		
-		httpc2.onreadystatechange = function() { 
-			if(httpc2.readyState == XMLHttpRequest.DONE && httpc2.status == 200) {				
-				var dataFromJSON = JSON.parse(httpc2.responseText);	
+		httpReq.onreadystatechange = function() { 
+			if(httpReq.readyState == XMLHttpRequest.DONE && httpReq.status == 200) {	
+				// Empfang der Antwort des PHP-Skripts als JSON-Element
+				var dataFromJSON = JSON.parse(httpReq.responseText);	
 				
+				// Setzt die beiden alten Meldungen mit den Elementen der CSV-Datei
 				document.getElementById("oldMessageTop").innerHTML = dataFromJSON.newsNew;
 				document.getElementById("oldMessageBottom").innerHTML = dataFromJSON.newsOld;
 				
-				var radiobuttonTemp;
-				
+				// Anwählen des passenden RadioButtons (passend zum Zustand aus der CSV-Datei)
+				var radiobuttonTemp;				
 				switch(dataFromJSON.status) {
 					case "anwesend":
 						radiobuttonTemp = document.getElementById("rbAnwesend");
@@ -75,17 +79,19 @@
 				radiobuttonTemp.checked = true;
 			}				
 		}
-		httpc2.send(null);
+		httpReq.send(null);
 		
 		document.getElementById("newMessage").value = "Geben Sie hier die neue Meldung ein!";
 	}
 
+	// liest die Informationen aus den passenden HTML-Elementen und sendet diese an das PHP-Skript bei Betätigen des "Bestätigen"-Buttons
 	function btnConfirm() {
 		var lastMessageNew = document.getElementById("oldMessageTop").innerHTML;
 		var lastMessageOld = document.getElementById("oldMessageBottom").innerHTML;
 		var contentOfTextArea = document.getElementById("newMessage").value;
 		var chosenStateOfProf = "undefined";
 		
+		// Überprüft welcher der 5 RadioButtons gedrückt ist und speichert den zugehörigen Zustand
 		var buttons = document.forms[0];		
 		for(var i = 0; i < buttons.length; i++) {
 			if(buttons[i].checked) {
@@ -96,25 +102,28 @@
 		sendToPHP(chosenStateOfProf, contentOfTextArea, lastMessageNew, lastMessageOld);
 	}
 	
+	// formuliert & sendet eine XMLHttpRequest an das PHP-Skript um diesem die zu speichernden Werte zu übergeben
 	function sendToPHP(stateOfProf, newsToWrite, lastNewNews, lastOldNews) {
-		var httpc = new XMLHttpRequest();
+		var httpReq = new XMLHttpRequest();
 		var url = "saveDataToCSV.php";
-		httpc.open("POST", url, true);
+		var dataToSend = "zustand=" + stateOfProf + "&meldungWrite=" + newsToWrite + "&meldung1=" + lastNewNews + "&meldung2=" + lastOldNews;
+		httpReq.open("POST", url, true);
 		
-		httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		// httpc.setRequestHeader("Content-Length", dataToSend.length);
+		httpReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		
-		httpc.onreadystatechange = function() { 
-			if(httpc.readyState == XMLHttpRequest.DONE && httpc.status == 200) {
-				// alert(httpc.responseText);
+		httpReq.onreadystatechange = function() { 
+			if(httpReq.readyState == XMLHttpRequest.DONE && httpReq.status == 200) {
+				// Bei Antwort des PHP-Skripts:
+				// die Antwort auf der Konsole ausgeben und die Seite neuladen
 				console.log(this.responseText);
 				location.reload();
 			}
-		}
+		}		
 		 
-		httpc.send("zustand=" + stateOfProf + "&meldungWrite=" + newsToWrite + "&meldung1=" + lastNewNews + "&meldung2=" + lastOldNews);
+		httpReq.send(dataToSend);
 	}
 	
+	// aktualisiert die Seite, wenn der "Abbrechen"-Button gedrückt wird
 	function btnCancel() {
 		location.reload();
 	}

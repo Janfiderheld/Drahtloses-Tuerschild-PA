@@ -1,16 +1,20 @@
 <?php
-
-	$fileName = 'Meldungsaustausch.csv';
+	// Name (& Speicherort) der CSV-Datei, über die die Daten ausgetauscht werden
+	$fileName = 'status.csv';
+	// liest die Daten aus der CSV-Datei in das fileContentOld-Array
 	$file = fopen($fileName, 'r');	
-	/* oldFileContent ist ein Array:
+	
+	/* fileContentOld ist ein Array:
 	 * Position 0 - Status des Professors
 	 * Position 1 - erste Meldung, die angezeigt wird
 	 * Position 2 - zweite Meldung, die angezeigt wird
 	 */	
-	$oldFileContent = fgetcsv($file, 1000, ",");
+	$fileContentOld = fgetcsv($file, 1000, ",");
 	fclose($file);
 	
-	echo json_encode( array( 'status' => $oldFileContent[0], 'newsNew' => $oldFileContent[1], 'newsOld' => $oldFileContent[2] ) );
+	// Übergabe des Array-Inhalts als JSON formatiert an das Javascript-Skript 
+	echo json_encode( array( 'status' => $fileContentOld[0], 'newsNew' => $fileContentOld[1], 'newsOld' => $fileContentOld[2] ) );
 	
-	exit;
+	// Beendet das PHP-Skript
+	die;
 ?>
