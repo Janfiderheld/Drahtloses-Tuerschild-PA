@@ -1,7 +1,8 @@
 <?php
 	echo "Übertragene Daten werden gespeichert...\n";
 	// Name (& Speicherort) der CSV-Datei, über die die Daten ausgetauscht werden
-	$fileName = 'status.csv';
+	$fileName = 'status.csv';		// Speicherort im gleichen Ort
+	$fileName = './status.csv';		// Speicherort einen Ordner darüber
 	// Standard-Text aus dem TextArea der HTML-Datei
 	$defaultText = 'Geben Sie hier die neue Meldung ein!';
 	// Einstellen der internen Zeichenkodierung auf UTF-8 (wie bei HTML)

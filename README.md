@@ -1,13 +1,15 @@
 # Drahtloses Türschild PA
 
-Verantwortlich: Niclas Muss & Jan-Philipp Töberg
+Verantwortlich: [Niclas Muss](https://github.com/NiclasMuss) & [Jan-Philipp Töberg](https://github.com/Janfiderheld)
 
 Projektbetreuer: Prof. Dr.-Ing. Thomas Korte
 
 
 Startdatum: 02.05.2018
 
-Endedatum: 28.06.2018
+Endedatum: 02.07.2018
+
+Kolloquium: 05.07.2018
 
 ## Aufgabenbeschreibung:
 

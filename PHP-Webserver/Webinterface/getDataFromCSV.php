@@ -1,6 +1,7 @@
 <?php
 	// Name (& Speicherort) der CSV-Datei, über die die Daten ausgetauscht werden
-	$fileName = 'status.csv';
+	$fileName = 'status.csv';		// Speicherort im gleichen Ort
+	$fileName = './status.csv';		// Speicherort einen Ordner darüber
 	// liest die Daten aus der CSV-Datei in das fileContentOld-Array
 	$file = fopen($fileName, 'r');	
 	
