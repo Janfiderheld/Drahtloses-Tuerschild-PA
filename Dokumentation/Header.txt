@@ -1,0 +1,8 @@
+/**
+	*	Projektarbeit Sommersemester2018 - Drahtloses Türschild mit E-Paper-Display
+	*	Author:
+	*	Version:
+	*	Letzte Änderung:
+	*	
+	*	Beschreibung
+	**/
