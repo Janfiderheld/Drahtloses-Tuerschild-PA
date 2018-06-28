@@ -76,6 +76,9 @@ if(!isset(DISPLAYS[$displayType])){
     echo ("]");
     exit;
 }
+$hasRed = DISPLAYS[$displayType]['red'];
+
+$professor = htmlspecialchars($_GET["professor"]);
 
 //Read existing contents
 $contents = scandir('contents');
@@ -101,7 +104,6 @@ $im = imagecreate($displayWidth, $displayHeight);
 $background_color = ImageColorAllocate ($im, 255, 255, 255);
 $black = ImageColorAllocate($im, 0, 0, 0);
 $red = ImageColorAllocate($im, 0xFF, 0x00, 0x00);
-$yellow = ImageColorAllocate($im, 0xFF, 0xFF, 0x00);
 
 
 if(is_file($selectedContent)){
@@ -127,7 +129,7 @@ else{
     //$im = imagerotate($im, 180, 0);
     //$im = imagerotate($im, 180, 0);
 
-    echo rawImage($im, DISPLAYS[$displayType]['red'] );
+    echo rawImage($im, $hasRed);
 }
 
 imagedestroy($im);
