@@ -5,7 +5,13 @@
 	<title>Türschild - Config</title>
 </head>
 <body onload="reloadAndGetData()">
-	<h1>Einrichtung des Türschilds</h1>
+	<div>
+		<h1 style="display:inline-block; margin-right: 50%">Einrichtung des Türschilds</h1>
+		<select id="selectProf" style="display:inline-block" onchange="reloadTheWholePage()">
+			<option value="korte">Prof. Dr. Thomas Korte</option>
+			<option value="hausdoerfer">Prof. Dr. Rolf Hausdörfer</option>
+		</select>
+	</div>			
 	<hr>
 	
 	<h3>1) Anpassung des Zustands für das Feld "Ich bin..."</h3>
@@ -20,8 +26,8 @@
 	
 	<hr style="border:dashed #6E6E6E 2px">
 
-	<h3>Freitext erstellen</h3>
-	<textarea id="newMessage" rows="5" cols="200" style="resize:none">Geben Sie hier die neue Meldung ein!</textarea>
+	<h3>2) Freitext erstellen</h3>
+	<textarea id="newMessage" rows="5" cols="200" style="resize:none">Geben Sie hier die neue Meldung ein</textarea>
 	<p style="font-size: 11px; font-style: italic">Hinweis: Dieses Feld leer lassen um keine Änderungen vorzunehmen!</p>
 	
 	<h4>Aktuell werden folgende Meldungen angezeigt:</h4>
@@ -30,7 +36,7 @@
 	<p id="oldMessageBottom">Ich auch</p>
 	
 	<button type="submit" value="Submit" onclick="btnConfirm()">Bestätigen</button>
-	<button type="cancel" value="Cancel" onclick="btnCancel()">Abbrechen</button>
+	<button type="cancel" value="Cancel" onclick="reloadTheWholePage()">Abbrechen</button>
 
 	<p style="font-size: 10px">
 		Project by Niclas Muss & Jan-Philipp Töberg<br>
@@ -79,13 +85,18 @@
 				radiobuttonTemp.checked = true;
 			}				
 		}
-		httpReq.send(null);
 		
-		document.getElementById("newMessage").value = "Geben Sie hier die neue Meldung ein!";
+		var dropDownProfs = document.getElementById("selectProf");
+		var currentProf = dropDownProfs.options[dropDownProfs.selectedIndex].value;
+		httpReq.send("prof=" + currentProf);
+		
+		document.getElementById("newMessage").value = "Geben Sie hier die neue Meldung ein";
 	}
 
 	// liest die Informationen aus den passenden HTML-Elementen und sendet diese an das PHP-Skript bei Betätigen des "Bestätigen"-Buttons
 	function btnConfirm() {
+		var dropDownProfs = document.getElementById("selectProf");
+		var currentProf = dropDownProfs.options[dropDownProfs.selectedIndex].value;
 		var lastMessageNew = document.getElementById("oldMessageTop").innerHTML;
 		var lastMessageOld = document.getElementById("oldMessageBottom").innerHTML;
 		var contentOfTextArea = document.getElementById("newMessage").value;
@@ -99,14 +110,14 @@
 			}
 		}
 		
-		sendToPHP(chosenStateOfProf, contentOfTextArea, lastMessageNew, lastMessageOld);
+		sendToPHP(currentProf, chosenStateOfProf, contentOfTextArea, lastMessageNew, lastMessageOld);
 	}
 	
 	// formuliert & sendet eine XMLHttpRequest an das PHP-Skript um diesem die zu speichernden Werte zu übergeben
-	function sendToPHP(stateOfProf, newsToWrite, lastNewNews, lastOldNews) {
+	function sendToPHP(currentProf, stateOfProf, newsToWrite, lastNewNews, lastOldNews) {
 		var httpReq = new XMLHttpRequest();
 		var url = "saveDataToCSV.php";
-		var dataToSend = "zustand=" + stateOfProf + "&meldungWrite=" + newsToWrite + "&meldung1=" + lastNewNews + "&meldung2=" + lastOldNews;
+		var dataToSend = "prof=" + currentProf + "&zustand=" + stateOfProf + "&meldungWrite=" + newsToWrite + "&meldung1=" + lastNewNews + "&meldung2=" + lastOldNews;
 		httpReq.open("POST", url, true);
 		
 		httpReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -123,8 +134,8 @@
 		httpReq.send(dataToSend);
 	}
 	
-	// aktualisiert die Seite, wenn der "Abbrechen"-Button gedrückt wird
-	function btnCancel() {
+	// aktualisiert die Seite, wenn der "Abbrechen"-Button gedrückt oder ein anderer Prof ausgewählt wird
+	function reloadTheWholePage() {
 		location.reload();
 	}
 </script>
