@@ -144,9 +144,18 @@
 	imagettftext($im, $schriftGroesse, 0, 400, $cursorY, $black, $DEFAULT_FONT['bold'], "... ".$status[0]);
 	
 	//Bild anzeigen (Das Bild wird auf eine Größe höhe von 100 pixeln Runterskaliert. Das Seitenverhältniss kannch dabei ändern)
-    $imageSource = imagecreatefromjpeg($bild);
-    list($originalwidth, $originalheight) = getimagesize($bild);
-	$heigth = 100;
-	$width = 77; ($heigth/$originalheight)*$width;
-    imagecopyresampled($im, $imageSource, $displayWidth-$width, $displayHeight-$heigth, 0, 0, $width, $heigth, $originalwidth, $originalheight);
+	$Datei = pathinfo($bild);
+	$endung = $Datei['extension'];
+	if($endung == "png" OR $extension == "jpg" OR $extension == "jpeg"){ //Überprüfen ob der Pfad wirklich zu einem Bild führt
+		if($Datei['extension'] == "png"){
+				$imageSource = imagecreatefrompng($pfad);
+			}
+			if($Datei['extension'] == "jpg" OR $Datei['extension'] == "jpeg" ){
+				$imageSource = imagecreatefromjpeg($pfad);
+			}		
+		list($originalwidth, $originalheight) = getimagesize($bild); //Höhe und Weite des Bildes einlesen
+		$heigth = 100;
+		$width = 75; ($heigth/$originalheight)*$width;
+		imagecopyresampled($im, $imageSource, $displayWidth-$width, $displayHeight-$heigth, 0, 0, $width, $heigth, $originalwidth, $originalheight); //Bildgröße zu den geforderten neuen Werten verändern
+	}
 ?>
