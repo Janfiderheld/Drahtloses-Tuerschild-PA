@@ -146,12 +146,12 @@
 	//Bild anzeigen (Das Bild wird auf eine Größe höhe von 100 pixeln Runterskaliert. Das Seitenverhältniss kannch dabei ändern)
 	$Datei = pathinfo($bild);
 	$endung = $Datei['extension'];
-	if($endung == "png" OR $extension == "jpg" OR $extension == "jpeg"){ //Überprüfen ob der Pfad wirklich zu einem Bild führt
+	if($endung == "png" OR $endung == "jpg" OR $ndung == "jpeg"){ //Überprüfen ob der Pfad wirklich zu einem Bild führt
 		if($Datei['extension'] == "png"){
-				$imageSource = imagecreatefrompng($pfad);
+				$imageSource = imagecreatefrompng($bild);
 			}
 			if($Datei['extension'] == "jpg" OR $Datei['extension'] == "jpeg" ){
-				$imageSource = imagecreatefromjpeg($pfad);
+				$imageSource = imagecreatefromjpeg($bild);
 			}		
 		list($originalwidth, $originalheight) = getimagesize($bild); //Höhe und Weite des Bildes einlesen
 		$heigth = 100;
