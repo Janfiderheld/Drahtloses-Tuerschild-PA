@@ -4,7 +4,7 @@
 	<meta charset="utf-8"/>
 	<title>Türschild - Config</title>
 </head>
-<body onload="reloadAndGetData()">
+<body onload="reloadAndLoadData()">
 	<div>
 		<h1 style="display:inline-block; margin-right: 50%">Einrichtung des Türschilds</h1>
 		<select id="selectProf" style="display:inline-block" onchange="reloadTheWholePage()">
@@ -35,7 +35,7 @@
 	<p id="oldMessageTop">Ich bin eine alte Meldung</p>
 	<p id="oldMessageBottom">Ich auch</p>
 	
-	<button type="submit" value="Submit" onclick="btnConfirm()">Bestätigen</button>
+	<button type="submit" value="Submit" onclick="confirmAndStartSending()">Bestätigen</button>
 	<button type="cancel" value="Cancel" onclick="reloadTheWholePage()">Abbrechen</button>
 
 	<p style="font-size: 10px">
@@ -46,8 +46,8 @@
 
 <!-- Hier beginnt der Javascript-Teil -->
 <script type="text/javascript">
-	// lädt Zustand des Profs und beide alten Meldungen aus der CSV-Datei beim beim Aktualisieren der Seite 
-	function reloadAndGetData() {
+	// lädt Zustand des Profs und beide alten Meldungen aus der CSV-Datei beim Aktualisieren der Seite 
+	function reloadAndLoadData() {
 		var httpReq = new XMLHttpRequest();
 		var url = "getDataFromCSV.php";
 		httpReq.open("POST", url, true);
@@ -94,7 +94,7 @@
 	}
 
 	// liest die Informationen aus den passenden HTML-Elementen und sendet diese an das PHP-Skript bei Betätigen des "Bestätigen"-Buttons
-	function btnConfirm() {
+	function confirmAndStartSending() {
 		var dropDownProfs = document.getElementById("selectProf");
 		var currentProf = dropDownProfs.options[dropDownProfs.selectedIndex].value;
 		var lastMessageNew = document.getElementById("oldMessageTop").innerHTML;
@@ -110,11 +110,12 @@
 			}
 		}
 		
-		sendToPHP(currentProf, chosenStateOfProf, contentOfTextArea, lastMessageNew, lastMessageOld);
+		// senden der Daten über eine HTTP-Anfrage in einer eigenen Funktion
+		sendToPHPAndSave(currentProf, chosenStateOfProf, contentOfTextArea, lastMessageNew, lastMessageOld);
 	}
 	
 	// formuliert & sendet eine XMLHttpRequest an das PHP-Skript um diesem die zu speichernden Werte zu übergeben
-	function sendToPHP(currentProf, stateOfProf, newsToWrite, lastNewNews, lastOldNews) {
+	function sendToPHPAndSave(currentProf, stateOfProf, newsToWrite, lastNewNews, lastOldNews) {
 		var httpReq = new XMLHttpRequest();
 		var url = "saveDataToCSV.php";
 		var dataToSend = "prof=" + currentProf + "&zustand=" + stateOfProf + "&meldungWrite=" + newsToWrite + "&meldung1=" + lastNewNews + "&meldung2=" + lastOldNews;

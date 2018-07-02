@@ -12,21 +12,7 @@
 
 	// Einstellen der internen Zeichenkodierung auf UTF-8 (wie bei HTML)
 	mb_internal_encoding("UTF-8");
-	
-	// Standard-Text in dem Eingabebereich
-	$defaultText = 'Geben Sie hier die neue Meldung ein';
-	
-	// die übertragenen Daten von JavaScript
-	$state = htmlentities($_POST['zustand']);
-	$newsWithoutDate = htmlentities($_POST['meldungWrite']);
-	$newsToWrite = date('d.m.y - H:i')." ".$newsWithoutDate;
-	$newsNew = htmlentities($_POST['meldung1']);
-	// die erste alte Meldung, ohne die Datumsangabe vorweg
-	// Da die Datumsangabe genau 16 Zeichen lang ist, wird bei Zeichen 17 getrennt 
-	$newsNewWithoutDate = substr($newsNew, 17);
-	$newsOld = htmlentities($_POST['meldung2']);
-	$currentProf = htmlentities($_POST['prof']);
-	
+		
 	// wählt die Datei abhängig vom ausgewählten Professor aus
 	switch($currentProf) {
 		case 'korte':
@@ -42,6 +28,20 @@
 			$fileName = '../status.csv';		// Speicherort einen Ordner darüber
 			break;
 	}	
+	
+	// Standard-Text in dem Eingabebereich
+	$defaultText = 'Geben Sie hier die neue Meldung ein';
+	
+	// die übertragenen Daten von JavaScript
+	$state = htmlentities($_POST['zustand']);
+	$newsWithoutDate = htmlentities($_POST['meldungWrite']);
+	$newsToWrite = date('d.m.y - H:i')." ".$newsWithoutDate;
+	$newsNew = htmlentities($_POST['meldung1']);
+	// die erste alte Meldung, ohne die Datumsangabe vorweg
+	// Da die Datumsangabe genau 16 Zeichen lang ist, wird bei Zeichen 17 getrennt 
+	$newsNewWithoutDate = substr($newsNew, 17);
+	$newsOld = htmlentities($_POST['meldung2']);
+	$currentProf = htmlentities($_POST['prof']);
 	
 	echo "Übertragene Daten werden gespeichert...\n";	
 	
